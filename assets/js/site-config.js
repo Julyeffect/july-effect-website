@@ -27,15 +27,15 @@ window.SITE = {
 
   // ---- Contact details (replace placeholders) ----
   contact: {
-    email: "[hello@yourdomain.com]",
-    phone: "[+91 00000 00000]",
-    whatsapp: "", // e.g. "919876543210" (country code + number, digits only)
+    email: "effectjuly@gmail.com",
+    phone: "+91 93635 09051",
+    whatsapp: "919363509051", // e.g. "919876543210" (country code + number, digits only)
     studios: ["Chennai, Tamil Nadu", "Hyderabad, Telangana"]
   },
 
   // Leave a link empty ("") to hide that icon.
   socials: {
-    instagram: "",
+    instagram: "https://www.instagram.com/julyeffect/",
     youtube: "",
     linkedin: "",
     behance: ""
@@ -73,11 +73,7 @@ window.SITE = {
     ]
   },
 
-  // Team. Add, remove or reorder people. photo is optional
-  // (put the image in assets/img/team/ and write its path).
-  team: [
-    { name: "[Name]", role: "Founder & Director", photo: "" },
-    { name: "[Name]", role: "VFX & Post-Production Lead", photo: "" },
-    { name: "[Name]", role: "Producer", photo: "" }
-  ]
+  // Team section is hidden while this list is empty. To show it, add people like:
+  //   { name: "Ram", role: "Founder & Director", photo: "assets/img/team/ram.jpg" },
+  team: []
 };

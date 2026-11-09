@@ -25,7 +25,8 @@
 <link rel="icon" href="assets/img/logo-mark-dark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -37,7 +38,30 @@
   </symbol>
 </svg>
 
-<div class="letterbox" aria-hidden="true"><i></i><i></i></div>
+
+<!-- Opening sunrise (plays once per page load, ~1.6s, skipped for reduced motion) -->
+<div class="opener" id="opener" aria-hidden="true">
+  <div class="op-sun"></div>
+  <svg class="op-city" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMax slice">
+    <g class="op-far">
+      <rect x="40" y="120" width="60" height="140"/><rect x="120" y="80" width="44" height="180"/><rect x="190" y="140" width="70" height="120"/>
+      <rect x="300" y="60" width="38" height="200"/><rect x="360" y="110" width="80" height="150"/><rect x="760" y="70" width="46" height="190"/>
+      <rect x="830" y="130" width="74" height="130"/><rect x="930" y="40" width="34" height="220"/><rect x="990" y="100" width="66" height="160"/><rect x="1090" y="140" width="80" height="120"/>
+    </g>
+    <g class="op-near">
+      <rect x="0" y="170" width="110" height="90"/><rect x="230" y="150" width="56" height="110"/><rect x="470" y="130" width="90" height="130"/>
+      <rect x="640" y="160" width="70" height="100"/><rect x="900" y="175" width="120" height="85"/><rect x="1110" y="160" width="90" height="100"/>
+      <rect x="486" y="118" width="58" height="12" rx="6" class="op-leaf"/><rect x="238" y="140" width="40" height="10" rx="5" class="op-leaf"/><rect x="912" y="165" width="96" height="10" rx="5" class="op-leaf"/>
+    </g>
+    <rect class="op-rail" x="0" y="196" width="1200" height="5"/>
+    <g class="op-train"><rect x="0" y="182" width="150" height="14" rx="7"/><rect x="132" y="186" width="16" height="4" rx="2" class="op-light"/></g>
+  </svg>
+  <div class="op-brand">
+    <svg class="op-mark"><use href="#je-mark"/></svg>
+    <span class="op-word">July Effect</span>
+    <div class="op-meter"><span>SC 01 · TK 01 · ROLLING</span><i></i></div>
+  </div>
+</div>
 
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
@@ -51,8 +75,9 @@
       <a href="#" data-scroll="services">Services</a>
       <a href="#" data-scroll="about">About</a>
       <a href="#" data-scroll="contact">Contact</a>
+      <a class="btn btn-orange menu-cta" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Roll Camera <span class="arrow">↓</span></a>
     </nav>
-    <a class="btn btn-orange btn-sm header-cta" href="#" data-scroll="contact">Let's Create <span class="arrow">↗</span></a>
+    <a class="btn btn-orange btn-sm header-cta" href="#" data-scroll="contact" aria-label="Start a project"><span class="rec-dot" aria-hidden="true"></span><span class="cta-swap" aria-hidden="true"><span>Roll Camera</span><span>Action! ↓</span></span></a>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
   </div>
 </header>
@@ -117,7 +142,7 @@
         </div>
         <figure class="about-figure">
           <div class="frame">
-            <img src="assets/img/studio-desk.jpg" alt="A cinema camera, clapperboard and editing monitor on a sunlit studio desk" loading="lazy">
+            <picture><source srcset="assets/img/studio-desk.webp" type="image/webp"><img src="assets/img/studio-desk.jpg" alt="A cinema camera, clapperboard and editing monitor on a sunlit studio desk" loading="lazy" decoding="async" width="1520" height="348"></picture>
             <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
           </div>
           <figcaption class="mono-cap"><span>SC 01</span><span>TK 03</span><span>Studio floor, golden hour</span></figcaption>
@@ -160,6 +185,28 @@
   <!-- ================= PROJECT ================= -->
   <section class="view" id="view-project" hidden>
     <div class="project" id="project"></div>
+  </section>
+
+  <!-- ================= CALL TO ACTION (all pages) ================= -->
+  <section class="slate-cta" aria-labelledby="slateTitle">
+    <div class="wrap">
+      <div class="slate" id="slate">
+        <div class="clapper" aria-hidden="true"><span class="stick stick-top"></span><span class="stick stick-bottom"></span></div>
+        <div class="slate-body">
+          <dl class="slate-grid">
+            <div><dt>Production</dt><dd>Your next film</dd></div>
+            <div><dt>Scene</dt><dd>01</dd></div>
+            <div><dt>Take</dt><dd>1</dd></div>
+            <div><dt>Date</dt><dd id="slateDate">Today</dd></div>
+          </dl>
+          <div class="slate-main">
+            <h2 class="slate-title" id="slateTitle">The camera's ready.<br>Your story's next.</h2>
+            <p class="slate-sub">Fill in the form below, or chat with us on WhatsApp. We reply within one working day.</p>
+            <a class="btn btn-orange btn-action" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Call Action <span class="arrow">↓</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ================= CONTACT (all pages) ================= -->

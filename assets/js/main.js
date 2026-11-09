@@ -46,7 +46,8 @@
         vertical: forceVertical || /\/shorts\//.test(url),
         watch: "https://www.youtube.com/watch?v=" + id + (start ? "&t=" + start + "s" : ""),
         embed: "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0&modestbranding=1&playsinline=1" + (start ? "&start=" + start : ""),
-        thumbs: ["https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg", "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg"]
+        // WebP first (about half the size), then JPEG, then the always-available smaller size
+        thumbs: ["https://i.ytimg.com/vi_webp/" + id + "/maxresdefault.webp", "https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg", "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg"]
       };
     }
     if (/drive\.google\.com/.test(url)) {
@@ -144,7 +145,7 @@
   function cardHTML(p, i) {
     var meta = [p.client, p.category].filter(Boolean).join(" · ");
     return '<a class="card" style="--i:' + i + '" href="#p-' + p.slug + '">' +
-      thumbHTML(p, i < 2) +
+      thumbHTML(p, false) +
       badgeHTML(p) +
       '<span class="vf" aria-hidden="true"></span>' +
       '<span class="card-body"><h3 class="card-title">' + esc(p.title) + '</h3><p class="card-meta">' + esc(meta) + "</p></span>" +
@@ -222,7 +223,11 @@
       '</a><button class="copy-btn" type="button" data-copy="' + esc(clean(c.email)) + '">Copy</button></span></li>');
     if (c.phone) rows.push('<li><small>Phone</small><span><a href="tel:' + esc(clean(c.phone).replace(/[^\d+]/g, "")) + '">' + esc(c.phone) +
       '</a><button class="copy-btn" type="button" data-copy="' + esc(clean(c.phone)) + '">Copy</button></span></li>');
-    if (c.whatsapp) rows.push('<li><small>WhatsApp</small><a href="https://wa.me/' + esc(c.whatsapp) + '" target="_blank" rel="noopener">Message us ↗</a></li>');
+    if (c.whatsapp) {
+      var waLink = "https://wa.me/" + c.whatsapp + "?text=" + encodeURIComponent("Hi July Effect, I'd like to talk about a project.");
+      rows.push('<li><small>WhatsApp</small><span class="wa-cell"><a class="btn btn-wa" href="' + esc(waLink) + '" target="_blank" rel="noopener">' +
+        WA_ICON + 'Chat on WhatsApp</a><span class="wa-hint">Tap to open WhatsApp with a message ready to send.</span></span></li>');
+    }
     if (c.studios && c.studios.length) rows.push("<li><small>Studios</small><span>" + c.studios.map(esc).join("<br>") + "</span></li>");
     $("#contactList").innerHTML = rows.join("");
     var s = SITE.socials || {};
@@ -532,8 +537,23 @@
     }
   });
 
+  /* ---------- Clapperboard call-to-action ---------- */
+  var slateDate = $("#slateDate");
+  if (slateDate) {
+    var d = new Date(), pad2 = function (n) { return (n < 10 ? "0" : "") + n; };
+    slateDate.textContent = pad2(d.getDate()) + "." + pad2(d.getMonth() + 1) + "." + String(d.getFullYear()).slice(2);
+  }
+  var slate = $("#slate");
+  if (slate && "IntersectionObserver" in window && !reduceMotion) {
+    var clapObs = new IntersectionObserver(function (en) {
+      en.forEach(function (x) {
+        if (x.isIntersecting) { slate.classList.remove("clap"); void slate.offsetWidth; slate.classList.add("clap"); }
+      });
+    }, { threshold: 0.6 });
+    clapObs.observe(slate);
+  }
+
   /* ---------- Boot ---------- */
-  setTimeout(function () { var l = $(".letterbox"); if (l) l.remove(); }, 1400);
   fillStatic();
   renderHome();
   window.addEventListener("hashchange", route);

@@ -67,7 +67,7 @@ Paste the link as it is. The site works out the player and thumbnail.
 
 The form is a 4-step "Build your shot" quiz: what they're making → when → budget →
 name, WhatsApp (required), email and notes (optional). The same form opens as a pop-up from
-"Get a quote" (bottom bar on phones, floating pill on desktop), from "Roll Camera" in the header,
+"Get a consultation" (floating bar on phones, pill bottom-left on desktop), from "Roll Camera" in the header,
 and from "Want a film like this?" on every project page (which also records that project as a reference).
 
 Submissions appear in Netlify → Forms → **enquiry** with these fields:

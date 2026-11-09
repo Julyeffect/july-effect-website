@@ -319,7 +319,7 @@ button { font: inherit; color: inherit; }
 .stats dd { margin: 8px 0 0; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
 .about-figure { margin: 0; }
 .frame { position: relative; border-radius: 6px; overflow: hidden; background: var(--charcoal); padding-block: 22px; box-shadow: 0 40px 70px -40px rgba(30, 20, 5, .6); }
-.frame img { width: 100%; aspect-ratio: 760 / 174; object-fit: cover; max-width: 100%; }
+.frame img { width: 100%; height: auto; aspect-ratio: 1228 / 768; object-fit: cover; max-width: 100%; }
 .frame .corner { position: absolute; width: 22px; height: 22px; border: 2px solid var(--orange); }
 .corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
 .corner.tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
@@ -782,8 +782,8 @@ button { font: inherit; color: inherit; }
    ========================================================= */
 .quote-dock {
   position: fixed; z-index: 46; display: flex; gap: 10px; align-items: center;
-  right: calc(24px + env(safe-area-inset-right, 0px));
-  bottom: calc(24px + var(--dock-lift, 0px) + env(safe-area-inset-bottom, 0px));
+  left: calc(24px + env(safe-area-inset-left, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   transform: translateY(24px); opacity: 0; pointer-events: none; transition: transform .35s var(--ease), opacity .35s;
 }
 .dock-on .quote-dock { transform: none; opacity: 1; pointer-events: auto; }
@@ -798,15 +798,17 @@ button { font: inherit; color: inherit; }
 .qd-wa { display: none; }
 @media (max-width: 900px) {
   .quote-dock {
-    left: 0; right: 0; bottom: var(--dock-lift, 0px);
-    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
-    background: rgba(28, 26, 22, .95); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    box-shadow: 0 -10px 30px -12px rgba(0, 0, 0, .5); transform: translateY(110%);
+    /* floats above Netlify's badge, which sits in the bottom-right corner */
+    left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding: 8px; border-radius: 20px;
+    background: rgba(28, 26, 22, .94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .55); transform: translateY(calc(100% + 80px));
   }
   .qd-btn { flex: 1; justify-content: center; height: 52px; padding: 0 16px; }
   .qd-wa:not([hidden]) { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: #25D366; color: #fff; flex-shrink: 0; }
   .qd-wa svg { width: 26px; height: 26px; }
-  .footer-inner { padding-bottom: calc(34px + 80px + env(safe-area-inset-bottom, 0px)); }
+  .footer-inner { padding-bottom: calc(34px + 140px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* =========================================================
@@ -823,3 +825,15 @@ button { font: inherit; color: inherit; }
 .film-like .btn { gap: 10px; }
 .film-like .rec-dot { background: #1A1008; box-shadow: 0 0 0 3px rgba(26, 16, 8, .18); }
 @media (max-width: 640px) { .film-like .btn { width: 100%; } }
+
+/* Consultation button: label + quirky tag. Row on desktop, two lines on phones. */
+.qd-main { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+@media (max-width: 900px) {
+  .qd-btn { flex-direction: column; justify-content: center; gap: 1px; height: 56px; border-radius: 14px; padding: 0 14px; }
+  .qd-btn .qd-main { font-size: 16px; }
+  .qd-btn .qd-sub { background: none; padding: 0; font-size: 10.5px; letter-spacing: .14em; opacity: .75; }
+  .qd-wa:not([hidden]) { height: 56px; width: 56px; }
+}
+@media (max-width: 640px) {
+  .frame img { aspect-ratio: 928 / 992; }
+}

@@ -51,9 +51,9 @@
       <a href="#" data-scroll="services">Services</a>
       <a href="#" data-scroll="about">About</a>
       <a href="#" data-scroll="contact">Contact</a>
-      <a class="btn btn-orange menu-cta" href="#contact" data-quote><span class="rec-dot" aria-hidden="true"></span>Get a free quote <span class="arrow">↗</span></a>
+      <a class="btn btn-orange menu-cta" href="#contact" data-quote><span class="rec-dot" aria-hidden="true"></span>Get a consultation <span class="arrow">↗</span></a>
     </nav>
-    <a class="btn btn-orange btn-sm header-cta" href="#contact" data-quote aria-label="Get a free quote"><span class="rec-dot" aria-hidden="true"></span><span class="cta-swap" aria-hidden="true"><span>Roll Camera</span><span>Get a quote ↗</span></span></a>
+    <a class="btn btn-orange btn-sm header-cta" href="#contact" data-quote aria-label="Get a consultation"><span class="rec-dot" aria-hidden="true"></span><span class="cta-swap" aria-hidden="true"><span>Roll Camera</span><span>Consult us ↗</span></span></a>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
   </div>
 </header>
@@ -120,7 +120,12 @@
         </div>
         <figure class="about-figure">
           <div class="frame">
-            <picture><source srcset="assets/img/studio-desk.webp" type="image/webp"><img src="assets/img/studio-desk.jpg" alt="A cinema camera, clapperboard and editing monitor on a sunlit studio desk" loading="lazy" decoding="async" width="1520" height="348"></picture>
+            <picture>
+              <source media="(max-width: 640px)" srcset="assets/img/studio-tall.webp" type="image/webp" width="928" height="992">
+              <source media="(max-width: 640px)" srcset="assets/img/studio-tall.jpg" width="928" height="992">
+              <source srcset="assets/img/studio-wide-800.webp 800w, assets/img/studio-wide.webp 1228w" sizes="(max-width: 1100px) 92vw, 640px" type="image/webp">
+              <img src="assets/img/studio-wide.jpg" alt="A sunlit studio desk with a cinema camera, clapperboard, film reels and editing monitors, looking out over a green solar-powered city with an elevated train" loading="lazy" decoding="async" width="1228" height="768">
+            </picture>
             <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
           </div>
           <figcaption class="mono-cap"><span>SC 01</span><span>TK 03</span><span>Studio floor, golden hour</span></figcaption>
@@ -179,7 +184,7 @@
           </dl>
           <div class="slate-main">
             <h2 class="slate-title" id="slateTitle">The camera's ready.<br>Your story's next.</h2>
-            <p class="slate-sub">Four quick questions, about a minute. Or chat with us on WhatsApp. We reply within one working day.</p>
+            <p class="slate-sub">4 taps, one take. Or chat with us on WhatsApp. We reply within one working day.</p>
             <a class="btn btn-orange btn-action" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Start your brief <span class="arrow">↓</span></a>
           </div>
         </div>
@@ -199,7 +204,7 @@
         <div class="socials" id="socials"></div>
       </div>
       <!-- Netlify Forms: submissions appear in Netlify → Forms → "enquiry".
-           This one form is the "Build your shot" quiz. The Get a quote pop-up borrows it, so there is only ever one form. -->
+           This one form is the "Build your shot" quiz. The Get a consultation pop-up borrows it, so there is only ever one form. -->
       <div class="form-home" id="formHome">
       <form class="enquiry quiz" id="enquiry" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="enquiry">
@@ -280,9 +285,9 @@
   </div>
 </footer>
 
-<!-- Get a quote: slim bar on phones, floating pill on desktop. Opens the quote panel. -->
+<!-- Get a consultation: floating bar on phones (above Netlify's badge), pill bottom-left on desktop. Opens the panel. -->
 <div class="quote-dock" id="quoteDock">
-  <button class="qd-btn" type="button" data-quote><span class="rec-dot" aria-hidden="true"></span><span>Get a free quote</span><span class="qd-sub">60 sec</span></button>
+  <button class="qd-btn" type="button" data-quote><span class="qd-main"><span class="rec-dot" aria-hidden="true"></span>Get a consultation</span><span class="qd-sub">4 taps · one take</span></button>
   <a class="qd-wa" id="qdWa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" hidden></a>
 </div>
 
@@ -292,8 +297,8 @@
   <div class="qp-sheet" role="dialog" aria-modal="true" aria-labelledby="qpTitle">
     <div class="qp-head">
       <div>
-        <p class="qp-title" id="qpTitle"><span class="rec-dot" aria-hidden="true"></span>Get a free quote</p>
-        <p class="qp-sub">Four quick questions · about a minute</p>
+        <p class="qp-title" id="qpTitle"><span class="rec-dot" aria-hidden="true"></span>Get a consultation</p>
+        <p class="qp-sub">4 taps · one take. We'll take it from there.</p>
       </div>
       <button class="qp-close" type="button" data-qp-close aria-label="Close">✕</button>
     </div>

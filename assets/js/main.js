@@ -311,8 +311,8 @@
       (m ? '<p class="player-note">Video not playing? <a href="' + esc(m.watch) + '" target="_blank" rel="noopener">Watch on ' + esc(m.host) + " ↗</a></p>" : "") +
       "</div></section>" +
       '<div class="wrap"><div class="role-callout"><span class="role-dot" aria-hidden="true"></span><p><strong>July Effect\'s role: ' + esc(roleText) + ".</strong> " + esc(p.scopeNote) + "</p></div>" +
-      '<div class="film-like"><div class="film-like-copy"><p class="film-like-title">Want a film like this?</p><p class="film-like-sub">Tell us about yours. Four quick questions, about a minute.</p></div>' +
-      '<button class="btn btn-orange" type="button" data-quote data-ref="' + esc(p.title + (p.client ? " — " + p.client : "")) + '"><span class="rec-dot" aria-hidden="true"></span>Get a quote <span class="arrow">↗</span></button></div>' +
+      '<div class="film-like"><div class="film-like-copy"><p class="film-like-title">Want a film like this?</p><p class="film-like-sub">Tell us about yours. 4 taps, one take.</p></div>' +
+      '<button class="btn btn-orange" type="button" data-quote data-ref="' + esc(p.title + (p.client ? " — " + p.client : "")) + '"><span class="rec-dot" aria-hidden="true"></span>Get a consultation <span class="arrow">↗</span></button></div>' +
       '<div class="project-info"><dl class="meta-list">' +
       meta.map(function (r) { return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>"; }).join("") +
       '</dl><div class="project-desc"><p>' + esc(p.description) + '</p><button class="btn btn-dark" type="button" data-quote data-ref="' + esc(p.title + (p.client ? " — " + p.client : "")) + '">Start a similar project <span class="arrow">↗</span></button></div></div>' +
@@ -636,23 +636,10 @@
     document.body.classList.toggle("dock-on", on);
   }
   window.addEventListener("scroll", updateDock, { passive: true });
-  window.addEventListener("resize", function () { updateDock(); placeDock(); });
+  window.addEventListener("resize", updateDock);
 
-  // Netlify adds a "Powered by Netlify" badge in the bottom corner. Sit the quote button just above it.
-  function placeDock() {
-    var lift = 0;
-    Array.prototype.forEach.call(document.body.children, function (el) {
-      if (el === dock || el === panel || el.id === "lightbox" || /^(SCRIPT|STYLE|HEADER|MAIN|FOOTER|svg)$/i.test(el.tagName)) return;
-      var cs = getComputedStyle(el);
-      if (cs.position !== "fixed" || cs.display === "none" || cs.visibility === "hidden") return;
-      var txt = (el.textContent || "") + (el.shadowRoot ? el.shadowRoot.textContent : "");
-      if (!/netlify/i.test(txt)) return;
-      var r = el.getBoundingClientRect();
-      if (r.height > 0 && r.height < 140 && r.bottom > window.innerHeight - 160) lift = Math.max(lift, Math.round(window.innerHeight - r.top + 8));
-    });
-    dock.style.setProperty("--dock-lift", lift + "px");
-  }
-  [300, 1500, 4000].forEach(function (ms) { setTimeout(placeDock, ms); });
+  // Netlify's "Powered by Netlify" badge sits in the bottom-right corner and can't be moved,
+  // so the button lives bottom-left on desktop and floats above the badge on phones (see style.css).
 
   /* ---------- Clapperboard call-to-action ---------- */
   var slateDate = $("#slateDate");

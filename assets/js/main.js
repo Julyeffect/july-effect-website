@@ -466,14 +466,17 @@
     var btn = form.querySelector('button[type="submit"]');
     var email = clean((SITE.contact || {}).email);
     var ok = true;
-    ["f-name", "f-email", "f-message"].forEach(function (id) {
+    ["f-name", "f-email", "f-phone", "f-message"].forEach(function (id) {
       var el = document.getElementById(id);
-      var bad = !el.value.trim() || (el.type === "email" && !/^\S+@\S+\.\S+$/.test(el.value));
+      var v = el.value.trim();
+      var bad = !v ||
+        (el.type === "email" && !/^\S+@\S+\.\S+$/.test(v)) ||
+        (el.type === "tel" && (!/^[+\d][\d\s()-]*$/.test(v) || v.replace(/\D/g, "").length < 10 || v.replace(/\D/g, "").length > 15));
       el.closest(".field").classList.toggle("invalid", bad);
       if (bad) ok = false;
     });
     status.classList.remove("error");
-    if (!ok) { status.textContent = "Please add your name, a valid email and a few lines about the project."; status.classList.add("error"); return; }
+    if (!ok) { status.textContent = "Please add your name, a valid email, a phone number with at least 10 digits, and a few lines about the project."; status.classList.add("error"); return; }
 
     var needs = Array.prototype.map.call(form.querySelectorAll("#needChips input:checked"), function (i) { return i.value; });
     $("#f-services").value = needs.join(", ");
@@ -509,7 +512,7 @@
       fetch(SITE.formEndpoint, { method: "POST", headers: { Accept: "application/json" }, body: data })
         .then(function (r) { if (!r.ok) throw new Error(); thanks(); }).catch(fail);
     } else {
-      var body = "Name: " + data.get("name") + "\nEmail: " + data.get("email") + "\nCompany: " + data.get("company") +
+      var body = "Name: " + data.get("name") + "\nEmail: " + data.get("email") + "\nPhone: " + data.get("phone") + "\nCompany: " + data.get("company") +
         "\nBudget: " + data.get("budget") + "\nNeeds: " + data.get("services") + "\n\n" + data.get("message");
       location.href = "mailto:" + email + "?subject=" + encodeURIComponent("Project enquiry — " + (data.get("company") || data.get("name"))) + "&body=" + encodeURIComponent(body);
       status.textContent = "Your email app should open with this message ready to send. If it doesn't, write to " + email + ".";

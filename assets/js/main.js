@@ -465,19 +465,31 @@
     var status = $("#formStatus");
     var btn = form.querySelector('button[type="submit"]');
     var email = clean((SITE.contact || {}).email);
-    var ok = true;
-    ["f-name", "f-email", "f-phone", "f-message"].forEach(function (id) {
-      var el = document.getElementById(id);
+    // Check each required field and say exactly which ones need fixing.
+    var checks = [
+      { id: "f-name", label: "your name", test: function (v) { return v.length > 0; } },
+      { id: "f-email", label: "a valid email", test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); } },
+      // Count digits only, so spaces, dashes, brackets and hidden characters pasted by phones don't matter.
+      { id: "f-phone", label: "a phone number (10 to 15 digits)", test: function (v) { var d = v.replace(/\D/g, "").length; return d >= 10 && d <= 15; } },
+      { id: "f-message", label: "a few lines about the project", test: function (v) { return v.length > 0; } }
+    ];
+    var problems = [], firstBad = null;
+    checks.forEach(function (c) {
+      var el = document.getElementById(c.id);
       if (!el) return; // field not on the page (e.g. older index.html) — skip it
-      var v = el.value.trim();
-      var bad = !v ||
-        (el.type === "email" && !/^\S+@\S+\.\S+$/.test(v)) ||
-        (el.type === "tel" && (!/^[+\d][\d\s()-]*$/.test(v) || v.replace(/\D/g, "").length < 10 || v.replace(/\D/g, "").length > 15));
+      var v = el.value.replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, "").trim();
+      el.value = v;
+      var bad = !c.test(v);
       el.closest(".field").classList.toggle("invalid", bad);
-      if (bad) ok = false;
+      if (bad) { problems.push(c.label); if (!firstBad) firstBad = el; }
     });
     status.classList.remove("error");
-    if (!ok) { status.textContent = "Please add your name, a valid email, a phone number with at least 10 digits, and a few lines about the project."; status.classList.add("error"); return; }
+    if (problems.length) {
+      status.textContent = "Please add " + problems.join(", ") + ".";
+      status.classList.add("error");
+      firstBad.focus();
+      return;
+    }
 
     var needs = Array.prototype.map.call(form.querySelectorAll("#needChips input:checked"), function (i) { return i.value; });
     if ($("#f-services")) $("#f-services").value = needs.join(", ");

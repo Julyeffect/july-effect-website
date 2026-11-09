@@ -559,7 +559,7 @@ button { font: inherit; color: inherit; }
 /* ---------- Floating WhatsApp (phones) ---------- */
 .wa-float {
   position: fixed; z-index: 45; display: none; place-items: center;
-  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   width: 56px; height: 56px; border-radius: 50%; background: #25D366; color: #fff;
   box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .5);
   opacity: 0; transform: translateY(20px); transition: opacity .3s, transform .3s var(--ease);

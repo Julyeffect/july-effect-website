@@ -468,6 +468,7 @@
     var ok = true;
     ["f-name", "f-email", "f-phone", "f-message"].forEach(function (id) {
       var el = document.getElementById(id);
+      if (!el) return; // field not on the page (e.g. older index.html) — skip it
       var v = el.value.trim();
       var bad = !v ||
         (el.type === "email" && !/^\S+@\S+\.\S+$/.test(v)) ||
@@ -479,7 +480,7 @@
     if (!ok) { status.textContent = "Please add your name, a valid email, a phone number with at least 10 digits, and a few lines about the project."; status.classList.add("error"); return; }
 
     var needs = Array.prototype.map.call(form.querySelectorAll("#needChips input:checked"), function (i) { return i.value; });
-    $("#f-services").value = needs.join(", ");
+    if ($("#f-services")) $("#f-services").value = needs.join(", ");
     var data = new FormData(form);
     var first = String(data.get("name") || "").trim().split(" ")[0];
     var thanks = function () {

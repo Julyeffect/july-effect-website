@@ -235,18 +235,13 @@
       return '<a href="' + esc(s[k]) + '" target="_blank" rel="noopener" aria-label="' + k + '">' + SOCIAL_ICONS[k] + "</a>";
     }).join("");
 
-    // Floating WhatsApp button on phones, only when a number is set
-    var wa = $("#waFloat");
-    if (c.whatsapp) {
-      wa.href = "https://wa.me/" + c.whatsapp + "?text=" + encodeURIComponent("Hi July Effect, I'd like to talk about a project.");
-      wa.innerHTML = WA_ICON;
-      wa.hidden = false;
+    // WhatsApp shortcut in the phone quote bar, only when a number is set
+    var qdWa = $("#qdWa");
+    if (c.whatsapp && qdWa) {
+      qdWa.href = "https://wa.me/" + c.whatsapp + "?text=" + encodeURIComponent("Hi July Effect, I'd like to talk about a project.");
+      qdWa.innerHTML = WA_ICON;
+      qdWa.hidden = false;
     }
-
-    var needs = (SITE.services || []).map(function (x) { return x.title; }).concat(["Something else"]);
-    $("#needChips").innerHTML = needs.map(function (n, i) {
-      return '<label class="chip"><input type="checkbox" id="need-' + i + '" value="' + esc(n) + '"><span>' + esc(n) + "</span></label>";
-    }).join("");
 
     $("#footerNote").textContent = "© " + new Date().getFullYear() + " " + (SITE.name || "July Effect") + " · " + locs.join(" · ");
   }
@@ -316,9 +311,11 @@
       (m ? '<p class="player-note">Video not playing? <a href="' + esc(m.watch) + '" target="_blank" rel="noopener">Watch on ' + esc(m.host) + " ↗</a></p>" : "") +
       "</div></section>" +
       '<div class="wrap"><div class="role-callout"><span class="role-dot" aria-hidden="true"></span><p><strong>July Effect\'s role: ' + esc(roleText) + ".</strong> " + esc(p.scopeNote) + "</p></div>" +
+      '<div class="film-like"><div class="film-like-copy"><p class="film-like-title">Want a film like this?</p><p class="film-like-sub">Tell us about yours. Four quick questions, about a minute.</p></div>' +
+      '<button class="btn btn-orange" type="button" data-quote data-ref="' + esc(p.title + (p.client ? " — " + p.client : "")) + '"><span class="rec-dot" aria-hidden="true"></span>Get a quote <span class="arrow">↗</span></button></div>' +
       '<div class="project-info"><dl class="meta-list">' +
       meta.map(function (r) { return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>"; }).join("") +
-      '</dl><div class="project-desc"><p>' + esc(p.description) + '</p><a class="btn btn-dark" href="#" data-scroll="contact">Start a similar project <span class="arrow">↗</span></a></div></div>' +
+      '</dl><div class="project-desc"><p>' + esc(p.description) + '</p><button class="btn btn-dark" type="button" data-quote data-ref="' + esc(p.title + (p.client ? " — " + p.client : "")) + '">Start a similar project <span class="arrow">↗</span></button></div></div>' +
       '<div class="project-nav"><a class="next-link" href="#p-' + next.slug + '"><span><small>Next project</small><strong>' + esc(next.title) +
       '</strong></span><span class="play" aria-hidden="true"></span></a></div></div>' +
       '<section class="related wrap"><div class="section-head"><h2 class="label-xl">More ' + esc(p.scopeLabel) + '</h2><a class="link-arrow" href="#work">View All Projects <span>↗</span></a></div>' +
@@ -342,6 +339,7 @@
     document.querySelectorAll(".nav a").forEach(function (a) { a.classList.toggle("active", view === "work" && a.getAttribute("href") === "#work"); });
   }
   function setMenu(open) {
+    setTimeout(function () { if (typeof updateDock === "function") updateDock(); }, 0);
     document.body.classList.toggle("menu-open", open);
     $("#menuBtn").setAttribute("aria-expanded", open);
     $("#menuBtn").setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -371,8 +369,10 @@
   }
 
   document.addEventListener("click", function (e) {
-    var t = e.target.closest("[data-scroll],[data-nav],[data-scope],[data-cat],[data-copy]");
+    var t = e.target.closest("[data-quote],[data-qp-close],[data-scroll],[data-nav],[data-scope],[data-cat],[data-copy]");
     if (!t) return;
+    if (t.hasAttribute("data-quote")) { e.preventDefault(); setMenu(false); openQuote(t.getAttribute("data-ref") || ""); return; }
+    if (t.hasAttribute("data-qp-close")) { closeQuote(); return; }
     if (t.hasAttribute("data-copy")) {
       var txt = t.getAttribute("data-copy");
       var done = function () { t.textContent = "Copied"; setTimeout(function () { t.textContent = "Copy"; }, 1600); };
@@ -463,26 +463,82 @@
   lb.addEventListener("click", function (e) { if (e.target === lb) closeReel(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !lb.hidden) closeReel(); });
 
-  /* ---------- Enquiry form ---------- */
+  /* ---------- "Build your shot" quiz (the enquiry form) ---------- */
   var form = $("#enquiry");
+  var steps = Array.prototype.slice.call(form.querySelectorAll(".q-step"));
+  var frames = Array.prototype.slice.call(form.querySelectorAll("#qFrames li"));
+  var qBack = $("#qBack"), qNext = $("#qNext"), qSend = $("#qSend"), qDone = $("#qDone");
+  var status = $("#formStatus");
+  var cur = 0;
+
+  function stepAnswered(i) { return !steps[i].querySelector('input[type="radio"]') || !!steps[i].querySelector("input:checked"); }
+  function showStep(i, focus) {
+    cur = i;
+    steps.forEach(function (s, k) { s.classList.toggle("is-active", k === i); });
+    frames.forEach(function (f, k) { f.classList.toggle("on", k <= i); });
+    $("#qCount").textContent = "Shot " + (i + 1) + " / " + steps.length;
+    var last = i === steps.length - 1;
+    qBack.hidden = i === 0;
+    qSend.hidden = !last;
+    qNext.hidden = last || !stepAnswered(i);
+    status.textContent = ""; status.classList.remove("error");
+    if (focus) {
+      var target = steps[i].querySelector("input:checked") || steps[i].querySelector("input:not([type=hidden])");
+      if (target) target.focus({ preventScroll: !$("#quotePanel").hidden });
+    }
+  }
+  // Tap an answer → move to the next shot. Keyboard users get the Next button instead.
+  form.addEventListener("click", function (e) {
+    var r = e.target.closest('input[type="radio"]');
+    if (!r) return;
+    qNext.hidden = cur === steps.length - 1;
+    if (e.detail > 0 && cur < steps.length - 1) setTimeout(function () { showStep(cur + 1, true); }, 220);
+  });
+  form.addEventListener("change", function (e) {
+    if (e.target.type === "radio") qNext.hidden = cur === steps.length - 1;
+  });
+  qNext.addEventListener("click", function () { if (stepAnswered(cur)) showStep(cur + 1, true); });
+  // Clear an error as soon as the visitor starts fixing it.
+  form.addEventListener("input", function (e) {
+    var f = e.target.closest(".field");
+    if (f && f.classList.contains("invalid")) { f.classList.remove("invalid"); status.textContent = ""; status.classList.remove("error"); }
+  });
+  qBack.addEventListener("click", function () { if (cur > 0) showStep(cur - 1, true); });
+
+  function setRef(ref) {
+    $("#f-ref").value = ref || "";
+    $("#qRefText").textContent = ref || "";
+    $("#qRef").hidden = !ref;
+  }
+  $("#qRefClear").addEventListener("click", function () { setRef(""); });
+
+  function setDone(on) {
+    qDone.hidden = !on;
+    ["#qTop", "#qNav"].forEach(function (sel) { $(sel).hidden = on; });
+    steps.forEach(function (s) { s.hidden = on; });
+    if (on) $("#qRef").hidden = true;
+  }
+  function resetQuiz() { form.reset(); setRef(""); setDone(false); showStep(0, false); }
+  $("#qAgain").addEventListener("click", function () { resetQuiz(); showStep(0, true); });
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var status = $("#formStatus");
-    var btn = form.querySelector('button[type="submit"]');
+    if (cur < steps.length - 1) { if (stepAnswered(cur)) showStep(cur + 1, true); return; }
+    for (var k = 0; k < steps.length - 1; k++) {
+      if (!stepAnswered(k)) { showStep(k, true); status.textContent = "Pick one option to continue."; status.classList.add("error"); return; }
+    }
     var email = clean((SITE.contact || {}).email);
-    // Check each required field and say exactly which ones need fixing.
     var checks = [
       { id: "f-name", label: "your name", test: function (v) { return v.length > 0; } },
-      { id: "f-email", label: "a valid email", test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); } },
-      // Count digits only, so spaces, dashes, brackets and hidden characters pasted by phones don't matter.
-      { id: "f-phone", label: "a phone number (10 to 15 digits)", test: function (v) { var d = v.replace(/\D/g, "").length; return d >= 10 && d <= 15; } },
-      { id: "f-message", label: "a few lines about the project", test: function (v) { return v.length > 0; } }
+      // Count digits only, so spaces, dashes and hidden characters pasted by phones don't matter.
+      { id: "f-phone", label: "a WhatsApp number (10 to 15 digits)", test: function (v) { var d = v.replace(/\D/g, "").length; return d >= 10 && d <= 15; } },
+      { id: "f-email", label: "a valid email (or leave it empty)", test: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); } }
     ];
     var problems = [], firstBad = null;
     checks.forEach(function (c) {
       var el = document.getElementById(c.id);
-      if (!el) return; // field not on the page (e.g. older index.html) — skip it
-      var v = el.value.replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, "").trim();
+      if (!el) return;
+      var v = el.value.replace(/[​-‏‪-‮⁦-⁩﻿]/g, "").trim();
       el.value = v;
       var bad = !c.test(v);
       el.closest(".field").classList.toggle("invalid", bad);
@@ -496,28 +552,35 @@
       return;
     }
 
-    var needs = Array.prototype.map.call(form.querySelectorAll("#needChips input:checked"), function (i) { return i.value; });
-    if ($("#f-services")) $("#f-services").value = needs.join(", ");
     var data = new FormData(form);
     var first = String(data.get("name") || "").trim().split(" ")[0];
+    var service = String(data.get("service") || "a project");
     var thanks = function () {
-      status.textContent = "Thanks, " + first + ". Your enquiry is with us and we'll reply soon.";
-      form.reset();
-      btn.disabled = false;
+      qSend.disabled = false;
+      $("#qDoneSub").textContent = "Thanks, " + first + ". We'll WhatsApp you within one working day.";
+      var wa = (SITE.contact || {}).whatsapp;
+      var qWa = $("#qWa");
+      if (wa) {
+        qWa.href = "https://wa.me/" + wa + "?text=" + encodeURIComponent("Hi July Effect, I just sent a brief for a " + service.toLowerCase() + ". I'm " + first + ".");
+        qWa.innerHTML = WA_ICON + "Chat on WhatsApp now";
+        qWa.hidden = false;
+      }
+      form.reset(); setRef("");
+      setDone(true);
+      status.textContent = "";
     };
     var fail = function () {
-      status.textContent = "That didn't go through. Please email us at " + email + " or try again in a minute.";
+      status.textContent = "That didn't go through. Please try again, or message us on WhatsApp" + (email ? " or email " + email : "") + ".";
       status.classList.add("error");
-      btn.disabled = false;
+      qSend.disabled = false;
     };
     var provider = SITE.formProvider || "netlify";
-
     if (provider === "netlify") {
       if (location.protocol === "file:") {
         status.textContent = "The form sends once the site is live on Netlify. Nothing was sent from this local copy.";
         return;
       }
-      btn.disabled = true;
+      qSend.disabled = true;
       status.textContent = "Sending…";
       fetch("/", {
         method: "POST",
@@ -525,17 +588,71 @@
         body: new URLSearchParams(data).toString()
       }).then(function (r) { if (!r.ok) throw new Error(); thanks(); }).catch(fail);
     } else if (provider === "formspree" && SITE.formEndpoint) {
-      btn.disabled = true;
+      qSend.disabled = true;
       status.textContent = "Sending…";
       fetch(SITE.formEndpoint, { method: "POST", headers: { Accept: "application/json" }, body: data })
         .then(function (r) { if (!r.ok) throw new Error(); thanks(); }).catch(fail);
     } else {
-      var body = "Name: " + data.get("name") + "\nEmail: " + data.get("email") + "\nPhone: " + data.get("phone") + "\nCompany: " + data.get("company") +
-        "\nBudget: " + data.get("budget") + "\nNeeds: " + data.get("services") + "\n\n" + data.get("message");
-      location.href = "mailto:" + email + "?subject=" + encodeURIComponent("Project enquiry — " + (data.get("company") || data.get("name"))) + "&body=" + encodeURIComponent(body);
-      status.textContent = "Your email app should open with this message ready to send. If it doesn't, write to " + email + ".";
+      var body = ["Making: " + data.get("service"), "When: " + data.get("timeline"), "Budget: " + data.get("budget"),
+        "Name: " + data.get("name"), "WhatsApp: " + data.get("phone"), "Email: " + data.get("email"),
+        "Reference: " + data.get("reference"), "", data.get("message")].join("\n");
+      location.href = "mailto:" + email + "?subject=" + encodeURIComponent("Project brief — " + data.get("name")) + "&body=" + encodeURIComponent(body);
     }
   });
+  showStep(0, false);
+
+  /* ---------- Quote panel (pop-up) and the always-visible quote button ---------- */
+  var panel = $("#quotePanel"), formHome = $("#formHome"), qpSlot = $("#qpSlot");
+  var dock = $("#quoteDock");
+  var quoteFocus = null;
+  function openQuote(ref) {
+    quoteFocus = document.activeElement;
+    if (!qDone.hidden) resetQuiz();
+    if (ref) setRef(ref);
+    qpSlot.appendChild(form);
+    panel.hidden = false;
+    document.body.classList.add("quote-open");
+    updateDock();
+    showStep(cur, true);
+  }
+  function closeQuote() {
+    if (panel.hidden) return;
+    formHome.appendChild(form);
+    panel.hidden = true;
+    document.body.classList.remove("quote-open");
+    updateDock();
+    if (quoteFocus && quoteFocus.focus) quoteFocus.focus({ preventScroll: true });
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panel.hidden) closeQuote(); });
+
+  var contactVisible = false;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (en) { contactVisible = en[0].isIntersecting; updateDock(); }, { threshold: 0.15 }).observe(formHome);
+  }
+  function updateDock() {
+    var phone = window.matchMedia("(max-width: 900px)").matches;
+    var scrolled = window.pageYOffset > 500;
+    var on = (phone || scrolled) && !contactVisible && panel.hidden && !document.body.classList.contains("menu-open");
+    document.body.classList.toggle("dock-on", on);
+  }
+  window.addEventListener("scroll", updateDock, { passive: true });
+  window.addEventListener("resize", function () { updateDock(); placeDock(); });
+
+  // Netlify adds a "Powered by Netlify" badge in the bottom corner. Sit the quote button just above it.
+  function placeDock() {
+    var lift = 0;
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el === dock || el === panel || el.id === "lightbox" || /^(SCRIPT|STYLE|HEADER|MAIN|FOOTER|svg)$/i.test(el.tagName)) return;
+      var cs = getComputedStyle(el);
+      if (cs.position !== "fixed" || cs.display === "none" || cs.visibility === "hidden") return;
+      var txt = (el.textContent || "") + (el.shadowRoot ? el.shadowRoot.textContent : "");
+      if (!/netlify/i.test(txt)) return;
+      var r = el.getBoundingClientRect();
+      if (r.height > 0 && r.height < 140 && r.bottom > window.innerHeight - 160) lift = Math.max(lift, Math.round(window.innerHeight - r.top + 8));
+    });
+    dock.style.setProperty("--dock-lift", lift + "px");
+  }
+  [300, 1500, 4000].forEach(function (ms) { setTimeout(placeDock, ms); });
 
   /* ---------- Clapperboard call-to-action ---------- */
   var slateDate = $("#slateDate");

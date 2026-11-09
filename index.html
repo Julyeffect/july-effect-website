@@ -39,30 +39,6 @@
 </svg>
 
 
-<!-- Opening sunrise (plays once per page load, ~1.6s, skipped for reduced motion) -->
-<div class="opener" id="opener" aria-hidden="true">
-  <div class="op-sun"></div>
-  <svg class="op-city" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMax slice">
-    <g class="op-far">
-      <rect x="40" y="120" width="60" height="140"/><rect x="120" y="80" width="44" height="180"/><rect x="190" y="140" width="70" height="120"/>
-      <rect x="300" y="60" width="38" height="200"/><rect x="360" y="110" width="80" height="150"/><rect x="760" y="70" width="46" height="190"/>
-      <rect x="830" y="130" width="74" height="130"/><rect x="930" y="40" width="34" height="220"/><rect x="990" y="100" width="66" height="160"/><rect x="1090" y="140" width="80" height="120"/>
-    </g>
-    <g class="op-near">
-      <rect x="0" y="170" width="110" height="90"/><rect x="230" y="150" width="56" height="110"/><rect x="470" y="130" width="90" height="130"/>
-      <rect x="640" y="160" width="70" height="100"/><rect x="900" y="175" width="120" height="85"/><rect x="1110" y="160" width="90" height="100"/>
-      <rect x="486" y="118" width="58" height="12" rx="6" class="op-leaf"/><rect x="238" y="140" width="40" height="10" rx="5" class="op-leaf"/><rect x="912" y="165" width="96" height="10" rx="5" class="op-leaf"/>
-    </g>
-    <rect class="op-rail" x="0" y="196" width="1200" height="5"/>
-    <g class="op-train"><rect x="0" y="182" width="150" height="14" rx="7"/><rect x="132" y="186" width="16" height="4" rx="2" class="op-light"/></g>
-  </svg>
-  <div class="op-brand">
-    <svg class="op-mark"><use href="#je-mark"/></svg>
-    <span class="op-word">July Effect</span>
-    <div class="op-meter"><span>SC 01 · TK 01 · ROLLING</span><i></i></div>
-  </div>
-</div>
-
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
     <a class="brand" href="#" data-nav="home" aria-label="July Effect home">
@@ -75,9 +51,9 @@
       <a href="#" data-scroll="services">Services</a>
       <a href="#" data-scroll="about">About</a>
       <a href="#" data-scroll="contact">Contact</a>
-      <a class="btn btn-orange menu-cta" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Roll Camera <span class="arrow">↓</span></a>
+      <a class="btn btn-orange menu-cta" href="#contact" data-quote><span class="rec-dot" aria-hidden="true"></span>Get a free quote <span class="arrow">↗</span></a>
     </nav>
-    <a class="btn btn-orange btn-sm header-cta" href="#" data-scroll="contact" aria-label="Start a project"><span class="rec-dot" aria-hidden="true"></span><span class="cta-swap" aria-hidden="true"><span>Roll Camera</span><span>Action! ↓</span></span></a>
+    <a class="btn btn-orange btn-sm header-cta" href="#contact" data-quote aria-label="Get a free quote"><span class="rec-dot" aria-hidden="true"></span><span class="cta-swap" aria-hidden="true"><span>Roll Camera</span><span>Get a quote ↗</span></span></a>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
   </div>
 </header>
@@ -88,8 +64,10 @@
     <section class="hero" id="top">
       <div class="hero-media" aria-hidden="true">
         <div class="hero-img"></div>
+        <div class="hero-sweep"></div>
         <div class="hero-sun"></div>
         <div class="hero-shade"></div>
+        <div class="hero-flare"></div>
       </div>
       <div class="wrap hero-inner">
         <p class="eyebrow eyebrow-light" data-site="eyebrow"></p>
@@ -201,8 +179,8 @@
           </dl>
           <div class="slate-main">
             <h2 class="slate-title" id="slateTitle">The camera's ready.<br>Your story's next.</h2>
-            <p class="slate-sub">Fill in the form below, or chat with us on WhatsApp. We reply within one working day.</p>
-            <a class="btn btn-orange btn-action" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Call Action <span class="arrow">↓</span></a>
+            <p class="slate-sub">Four quick questions, about a minute. Or chat with us on WhatsApp. We reply within one working day.</p>
+            <a class="btn btn-orange btn-action" href="#" data-scroll="contact"><span class="rec-dot" aria-hidden="true"></span>Start your brief <span class="arrow">↓</span></a>
           </div>
         </div>
       </div>
@@ -220,41 +198,73 @@
         <ul class="contact-list" id="contactList"></ul>
         <div class="socials" id="socials"></div>
       </div>
-      <!-- Netlify Forms: submissions appear in Netlify → Forms → "enquiry" -->
-      <form class="enquiry" id="enquiry" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <!-- Netlify Forms: submissions appear in Netlify → Forms → "enquiry".
+           This one form is the "Build your shot" quiz. The Get a quote pop-up borrows it, so there is only ever one form. -->
+      <div class="form-home" id="formHome">
+      <form class="enquiry quiz" id="enquiry" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="enquiry">
-        <input type="hidden" name="services" id="f-services" value="">
+        <input type="hidden" name="reference" id="f-ref" value="">
         <p class="hp" aria-hidden="true"><label>Leave this empty <input id="f-bot" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-        <div class="field-row">
-          <label class="field"><span>Name</span><input id="f-name" name="name" type="text" autocomplete="name" enterkeyhint="next" required></label>
-          <label class="field"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" enterkeyhint="next" required></label>
+
+        <div class="q-top" id="qTop">
+          <p class="q-count" id="qCount">Shot 1 / 4</p>
+          <ol class="q-frames" id="qFrames" aria-hidden="true"><li></li><li></li><li></li><li></li></ol>
         </div>
-        <div class="field-row">
-          <label class="field"><span>Phone / WhatsApp</span><input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="+91 98765 43210" required></label>
-          <label class="field"><span>Company / Brand</span><input id="f-company" name="company" type="text" autocomplete="organization"></label>
-        </div>
-        <div class="field-row">
-          <label class="field"><span>Budget</span>
-            <select id="f-budget" name="budget">
-              <option value="">Select a range</option>
-              <option>Under ₹2 lakh</option>
-              <option>₹2–5 lakh</option>
-              <option>₹5–15 lakh</option>
-              <option>₹15 lakh+</option>
-              <option>Not sure yet</option>
-            </select>
-          </label>
-        </div>
-        <fieldset class="chips-field">
-          <legend>What do you need?</legend>
-          <div class="chips" id="needChips"></div>
+        <p class="q-ref" id="qRef" hidden><span>Like</span> <b id="qRefText"></b> <button type="button" class="q-ref-x" id="qRefClear" aria-label="Remove this reference">✕</button></p>
+
+        <fieldset class="q-step is-active">
+          <legend class="q-title">What are we making?</legend>
+          <div class="q-opts">
+            <label class="q-opt"><input type="radio" name="service" value="Brand film"><span>Brand film</span></label>
+            <label class="q-opt"><input type="radio" name="service" value="Ad / Reel"><span>Ad / Reel</span></label>
+            <label class="q-opt"><input type="radio" name="service" value="VFX for your film"><span>VFX for your film</span></label>
+            <label class="q-opt"><input type="radio" name="service" value="Music video"><span>Music video</span></label>
+            <label class="q-opt"><input type="radio" name="service" value="Something else"><span>Something else</span></label>
+          </div>
         </fieldset>
-        <label class="field"><span>Project details</span><textarea id="f-message" name="message" rows="4" required placeholder="What are you making, and when do you need it?"></textarea></label>
-        <div class="form-foot">
-          <button class="btn btn-orange" type="submit">Send Enquiry <span class="arrow">↗</span></button>
-          <p class="form-status" id="formStatus" role="status"></p>
+        <fieldset class="q-step">
+          <legend class="q-title">When do you need it?</legend>
+          <div class="q-opts">
+            <label class="q-opt"><input type="radio" name="timeline" value="This month"><span>This month</span></label>
+            <label class="q-opt"><input type="radio" name="timeline" value="1–3 months"><span>1–3 months</span></label>
+            <label class="q-opt"><input type="radio" name="timeline" value="Just exploring"><span>Just exploring</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q-step">
+          <legend class="q-title">Rough budget?</legend>
+          <div class="q-opts">
+            <label class="q-opt"><input type="radio" name="budget" value="Under ₹2L"><span>Under ₹2L</span></label>
+            <label class="q-opt"><input type="radio" name="budget" value="₹2–5L"><span>₹2–5L</span></label>
+            <label class="q-opt"><input type="radio" name="budget" value="₹5–15L"><span>₹5–15L</span></label>
+            <label class="q-opt"><input type="radio" name="budget" value="₹15L+"><span>₹15L+</span></label>
+            <label class="q-opt"><input type="radio" name="budget" value="Not sure yet"><span>Not sure yet</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q-step">
+          <legend class="q-title">Where do we send ideas?</legend>
+          <div class="field-row">
+            <label class="field"><span>Name</span><input id="f-name" name="name" type="text" autocomplete="name" enterkeyhint="next"></label>
+            <label class="field"><span>WhatsApp number</span><input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="+91 98765 43210"></label>
+          </div>
+          <label class="field"><span>Email <em>(optional)</em></span><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" enterkeyhint="next"></label>
+          <label class="field"><span>Anything else? <em>(optional)</em></span><textarea id="f-message" name="message" rows="3" placeholder="Brand, idea, deadline, reference links…"></textarea></label>
+        </fieldset>
+
+        <div class="q-nav" id="qNav">
+          <button type="button" class="q-back" id="qBack" hidden>← Back</button>
+          <button type="button" class="btn btn-ghost q-next" id="qNext" hidden>Next <span class="arrow">→</span></button>
+          <button type="submit" class="btn btn-orange q-send" id="qSend" hidden>Send it <span class="arrow">▸</span></button>
+        </div>
+        <p class="form-status" id="formStatus" role="status"></p>
+
+        <div class="q-done" id="qDone" hidden>
+          <p class="q-wrap">That's a wrap!</p>
+          <p class="q-done-sub" id="qDoneSub">We'll WhatsApp you within one working day.</p>
+          <a class="btn btn-wa" id="qWa" href="#" target="_blank" rel="noopener" hidden>Chat on WhatsApp now</a>
+          <button type="button" class="q-back" id="qAgain">Send another brief</button>
         </div>
       </form>
+      </div>
     </div>
   </section>
 </main>
@@ -270,8 +280,26 @@
   </div>
 </footer>
 
-<!-- WhatsApp button (phones only, shows when a number is set in site-config.js) -->
-<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" hidden></a>
+<!-- Get a quote: slim bar on phones, floating pill on desktop. Opens the quote panel. -->
+<div class="quote-dock" id="quoteDock">
+  <button class="qd-btn" type="button" data-quote><span class="rec-dot" aria-hidden="true"></span><span>Get a free quote</span><span class="qd-sub">60 sec</span></button>
+  <a class="qd-wa" id="qdWa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" hidden></a>
+</div>
+
+<!-- Quote panel (pop-up). The quiz form moves in here while it's open. -->
+<div class="quote-panel" id="quotePanel" hidden>
+  <div class="qp-backdrop" data-qp-close></div>
+  <div class="qp-sheet" role="dialog" aria-modal="true" aria-labelledby="qpTitle">
+    <div class="qp-head">
+      <div>
+        <p class="qp-title" id="qpTitle"><span class="rec-dot" aria-hidden="true"></span>Get a free quote</p>
+        <p class="qp-sub">Four quick questions · about a minute</p>
+      </div>
+      <button class="qp-close" type="button" data-qp-close aria-label="Close">✕</button>
+    </div>
+    <div class="qp-slot" id="qpSlot"></div>
+  </div>
+</div>
 
 <!-- Video lightbox -->
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Video player">

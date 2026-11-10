@@ -841,3 +841,12 @@ button { font: inherit; color: inherit; }
 /* Privacy note under the enquiry form */
 .q-privacy { display: flex; gap: 8px; align-items: flex-start; margin: 2px 0 0; font-size: 13px; line-height: 1.5; color: rgba(255, 248, 236, .62); }
 .q-privacy svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px; color: var(--orange); }
+
+/* Mobile menu fix: the scrolled header's frosted-glass blur (backdrop-filter) traps
+   fixed-position children inside the 70px header, so the full-screen menu collapsed
+   and overlapped the page. Turn the blur off while the menu is open. */
+body.menu-open .site-header,
+body.menu-open .site-header.solid { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--charcoal); }
+@media (max-width: 900px) {
+  body.menu-open .nav { overflow-y: auto; overscroll-behavior: contain; }
+}

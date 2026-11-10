@@ -96,7 +96,10 @@
     used[slug] = true;
     var media = resolveMedia(p.video || p.link, p.vertical);
     var scope = SCOPES[p.scope] ? p.scope : "vfx";
-    var thumbs = (p.thumbnail ? [p.thumbnail] : []).concat(media ? media.thumbs : []);
+    var posterMedia = p.poster ? resolveMedia(p.poster) : null;
+    var thumbs = (p.thumbnail ? [p.thumbnail] : [])
+      .concat(posterMedia ? posterMedia.thumbs : [])
+      .concat(media ? media.thumbs : []);
     return {
       slug: slug, title: p.title, client: p.client || "", category: p.category || "Film",
       scope: scope, scopeLabel: SCOPES[scope].label, scopeNote: SCOPES[scope].note || "",
@@ -212,7 +215,7 @@
       var name = isPlaceholder(m.name) ? "Team member" : m.name;
       var initials = isPlaceholder(m.name) ? "" : m.name.split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join("").toUpperCase();
       return '<div class="member"><div class="member-photo">' +
-        (m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(name) + '" loading="lazy">' : '<span class="initials">' + esc(initials) + "</span>") +
+        (m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(name) + '" loading="lazy" decoding="async" width="800" height="1000">' : '<span class="initials">' + esc(initials) + "</span>") +
         "</div><h3>" + esc(name) + "</h3><p>" + esc(m.role) + "</p></div>";
     }).join("");
 

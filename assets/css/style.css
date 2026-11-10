@@ -168,8 +168,8 @@ button { font: inherit; color: inherit; }
 .hero-media { position: absolute; inset: 0; }
 .hero-img {
   position: absolute; inset: -2%;
-  background: url("../img/hero-city.jpg") 70% 40% / cover no-repeat;
-  background-image: image-set(url("../img/hero-city.webp") type("image/webp"), url("../img/hero-city.jpg") type("image/jpeg"));
+  background: url("../img/hero-city.jpg?v=4") 70% 40% / cover no-repeat;
+  background-image: image-set(url("../img/hero-city.webp?v=4") type("image/webp"), url("../img/hero-city.jpg?v=4") type("image/jpeg"));
   animation: drift 32s ease-in-out infinite alternate;
 }
 @keyframes drift { from { transform: scale(1.04) translate3d(0, 0, 0); } to { transform: scale(1.12) translate3d(-2%, -1%, 0); } }
@@ -347,8 +347,8 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Page head (work) ---------- */
 .page-head { position: relative; overflow: hidden; color: #FFF8EC; padding-block: 160px 70px; background: var(--charcoal); }
-.page-head-bg { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(28, 22, 14, .92), rgba(28, 22, 14, .55)), url("../img/hero-city.jpg") 60% 45% / cover; }
-.page-head-bg { background-image: linear-gradient(90deg, rgba(28, 22, 14, .92), rgba(28, 22, 14, .55)), image-set(url("../img/hero-city.webp") type("image/webp"), url("../img/hero-city.jpg") type("image/jpeg")); }
+.page-head-bg { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(28, 22, 14, .92), rgba(28, 22, 14, .55)), url("../img/hero-city.jpg?v=4") 60% 45% / cover; }
+.page-head-bg { background-image: linear-gradient(90deg, rgba(28, 22, 14, .92), rgba(28, 22, 14, .55)), image-set(url("../img/hero-city.webp?v=4") type("image/webp"), url("../img/hero-city.jpg?v=4") type("image/jpeg")); }
 .page-head .wrap { position: relative; }
 .page-title { font-family: var(--f-display); font-weight: 600; font-size: clamp(40px, 6vw, 80px); letter-spacing: -.03em; line-height: 1; margin: 10px 0 14px; }
 .page-sub { margin: 0; color: rgba(255, 248, 236, .8); font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; }
@@ -567,8 +567,8 @@ button { font: inherit; color: inherit; }
 @media (max-width: 640px) {
   .hero-img {
     animation: none; transform: none; inset: 0;
-    background-image: url("../img/hero-city-mobile.jpg");
-    background-image: image-set(url("../img/hero-city-mobile.webp") type("image/webp"), url("../img/hero-city-mobile.jpg") type("image/jpeg"));
+    background-image: url("../img/hero-city-mobile.jpg?v=4");
+    background-image: image-set(url("../img/hero-city-mobile.webp?v=4") type("image/webp"), url("../img/hero-city-mobile.jpg?v=4") type("image/jpeg"));
     background-position: 60% 30%;
   }
   .hero-sun { display: none; }
@@ -978,7 +978,7 @@ body {
   background-image:
     linear-gradient(90deg, rgba(22, 16, 10, .7) 0%, rgba(22, 16, 10, .4) 28%, rgba(22, 16, 10, .05) 52%, rgba(0, 0, 0, 0) 70%),
     linear-gradient(180deg, rgba(22, 16, 10, .3) 0%, rgba(22, 16, 10, 0) 22%),
-    image-set(url("../img/hero-city.webp") type("image/webp"), url("../img/hero-city.jpg") type("image/jpeg"));
+    image-set(url("../img/hero-city.webp?v=4") type("image/webp"), url("../img/hero-city.jpg?v=4") type("image/jpeg"));
   background-size: cover; background-position: 30% 45%;
 }
 .page-title { font-size: clamp(44px, 6.4vw, 92px); }

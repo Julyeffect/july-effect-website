@@ -1,0 +1,14 @@
+# Security headers for every page and file on the site (Netlify reads this file automatically).
+# If you add a new outside service later (e.g. Vimeo thumbnails, Google Analytics),
+# add its address to the matching part of Content-Security-Policy, or it will be blocked.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://drive.google.com https://*.googleusercontent.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com https://www.instagram.com https://player.vimeo.com; connect-src 'self'; media-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+
+# Images rarely change: let browsers keep them for a day so repeat visits load faster.
+/assets/img/*
+  Cache-Control: public, max-age=86400

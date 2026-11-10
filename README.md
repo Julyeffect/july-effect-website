@@ -86,3 +86,11 @@ In `assets/js/projects.js`:
 - [ ] `thumbnail` images for the 3 Instagram projects
 In `index.html` (after you have a domain):
 - [ ] Change `og:image` and `og:url` to full `https://yourdomain/...` addresses so WhatsApp shows the preview card
+
+## Security & search files
+
+- `_headers`: security rules Netlify applies to every page (blocks other sites from framing yours,
+  blocks injected scripts, forces HTTPS). It lists every outside service the site may load:
+  Google Fonts, YouTube, Google Drive, Instagram and Vimeo. **If you add a new outside service,
+  add its address to the Content-Security-Policy line, or it will be blocked.**
+- `robots.txt` and `sitemap.xml`: help Google find the site at https://julyeffect.com.

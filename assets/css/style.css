@@ -1057,3 +1057,27 @@ body {
 /* open phone menu is always dark, so its links stay light even after scrolling */
 body.menu-open .nav a, body.menu-open .site-header.solid .nav a { color: #FFF8EC; }
 body.menu-open .site-header .brand, body.menu-open .site-header .menu-btn { color: #FFF8EC; }
+
+/* =========================================================
+   The Founders (About section) — two portraits side by side,
+   capped in width so the layout never stretches or breaks.
+   ========================================================= */
+.team-grid { grid-template-columns: repeat(2, minmax(0, 300px)); gap: clamp(14px, 2.4vw, 32px); }
+.member-photo {
+  border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .6);
+  box-shadow: 0 30px 50px -30px rgba(40, 30, 15, .55), 0 2px 8px -3px rgba(40, 30, 15, .2);
+  background: #CFC6B9;
+}
+.member-photo img { transition: transform .8s var(--ease); }
+@media (hover: hover) and (pointer: fine) { .member:hover .member-photo img { transform: scale(1.04); } }
+.member h3 { font-size: clamp(17px, 1.6vw, 21px); margin-top: 16px; letter-spacing: -.01em; }
+.member p {
+  margin-top: 4px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--orange-deep); line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .member-photo { border-radius: 14px; }
+  .member h3 { font-size: 16px; margin-top: 12px; }
+  .member p { font-size: 9.5px; letter-spacing: .1em; }
+}

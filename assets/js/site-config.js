@@ -73,7 +73,10 @@ window.SITE = {
     ]
   },
 
-  // Team section is hidden while this list is empty. To show it, add people like:
-  //   { name: "Ram", role: "Founder & Director", photo: "assets/img/team/ram.jpg" },
-  team: []
+  // "The Founders" section in About. Edit names/roles here. Photos live in assets/img/team/
+  // (portrait 4:5, e.g. 800×1000). Remove everyone to hide the section.
+  team: [
+    { name: "Dharanibalan", role: "Co-founder · Creative Director", photo: "assets/img/team/dharanibalan.webp" },
+    { name: "Sanjay Ram", role: "Co-founder · Content Director", photo: "assets/img/team/sanjay-ram.webp" }
+  ]
 };
